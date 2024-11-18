@@ -1,0 +1,117 @@
+@startuml
+package "airline" {
+    class Aircraft {
+        + String model
+        + int capacity
+        + double fuelConsumption
+        + getDetails(): String
+    }
+
+    class CargoAircraft extends Aircraft {
+        + double cargoCapacity
+    }
+
+    class PassengerAircraft extends Aircraft {
+        + int passengerSeats
+    }
+
+    class Airline {
+        + List<Aircraft> aircrafts
+        + addAircraft(Aircraft): void
+        + removeAircraft(Aircraft): void
+        + sortAircraft(): void
+        + calculateTotalCapacity(): int
+        + findAircraftByFuelRange(min: double, max: double): List<Aircraft>
+    }
+}
+
+package "commands" {
+    interface Command {
+        + execute(): void
+    }
+
+    class AddAircraftCommand implements Command {
+        - Airline airline
+        - Aircraft aircraft
+        + execute(): void
+    }
+
+    class RemoveAircraftCommand implements Command {
+        - Airline airline
+        - Aircraft aircraft
+        + execute(): void
+    }
+
+    class ShowAircraftCommand implements Command {
+        - Airline airline
+        + execute(): void
+    }
+
+    class SortAircraftCommand implements Command {
+        - Airline airline
+        + execute(): void
+    }
+
+    class CalculateCapacityCommand implements Command {
+        - Airline airline
+        + execute(): void
+    }
+
+    class CalculateCargoCapacityCommand implements Command {
+        - Airline airline
+        + execute(): void
+    }
+
+    class FindAircraftByFuelCommand implements Command {
+        - Airline airline
+        - double minFuel
+        - double maxFuel
+        + execute(): void
+    }
+
+    class SaveToFileCommand implements Command {
+        - Airline airline
+        - String fileName
+        + execute(): void
+    }
+
+    class LoadFromFileCommand implements Command {
+        - Airline airline
+        - String fileName
+        + execute(): void
+    }
+
+    class ExitCommand implements Command {
+        + execute(): void
+    }
+}
+
+package "menu" {
+    class Menu {
+        - List<Command> commands
+        + addCommand(Command): void
+        + executeCommand(index: int): void
+    }
+}
+
+class AirlineApp {
+    + main(args: String[]): void
+}
+
+AirlineApp --> Menu
+Menu --> Command
+Command <|-- AddAircraftCommand
+Command <|-- RemoveAircraftCommand
+Command <|-- ShowAircraftCommand
+Command <|-- SortAircraftCommand
+Command <|-- CalculateCapacityCommand
+Command <|-- CalculateCargoCapacityCommand
+Command <|-- FindAircraftByFuelCommand
+Command <|-- SaveToFileCommand
+Command <|-- LoadFromFileCommand
+Command <|-- ExitCommand
+
+Airline --> Aircraft
+Aircraft <|-- CargoAircraft
+Aircraft <|-- PassengerAircraft
+@enduml
